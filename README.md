@@ -111,6 +111,16 @@ arch-chroot /mnt
 
 ## 7. Configuraciones Básicas
 
+Instalar editor de texto:
+```
+pacman -S nano
+```
+
+Keymap:
+```
+echo "KEYMAP=la-latin1" > /etc/vconsole.conf
+```
+
 Zona horaria:
 ```
 ln -sf /usr/share/zoneinfo/America/Argentina/Buenos_Aires /etc/localtime
@@ -144,7 +154,7 @@ nano /etc/mkinitcpio.conf
 
 Usar:
 ```
-HOOKS=(base udev autodetect modconf block keyboard keymap encrypt filesystems fsck)
+HOOKS=(base systemd autodetect microcode modconf kms keyboard keymap sd-vconsole sd-encrypt block filesystems fsck)
 ```
 
 Regenerar:
@@ -170,6 +180,16 @@ Instalar bootloader:
 pacman -S grub efibootmgr
 ```
 
+Generar GRUB:
+```
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+```
+
+Obtener UUID:
+```
+blkid
+```
+
 Agregar parámetros de LUKS:
 ```
 nano /etc/default/grub
@@ -177,18 +197,13 @@ nano /etc/default/grub
 
 Agregar dentro:
 ```
-GRUB_CMDLINE_LINUX="cryptdevice=UUID=<UUID-de-sdX3>:cryptroot root=/dev/mapper/cryptroot"
+GRUB_CMDLINE_LINUX="rd.luks.name=<UUID>=cryptroot root=/dev/mapper/cryptroot"
+
 ```
 
 Generar GRUB:
 ```
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
-```
-
-Obtener UUID:
-```
-blkid
 ```
 
 ---
@@ -201,6 +216,11 @@ useradd -m "<name>"
 passwd "<name>"
 ```
 
+Instalar sudo:
+```
+pacman -S sudo
+```
+
 Habilitar sudo:
 ```
 nano /etc/sudoers
@@ -211,8 +231,18 @@ Copiar la línea de root y reemplazar usuario.
 
 ## 11. Swapfile (si NO usaste partición swap)
 
+Saber capacidad de memoria RAM:
+```
+free -h
+```
+
+En vez de 4G se recomienda el doble de tu memoria ram
 ```
 fallocate -l 4G /swapfile
+````
+
+Mount swap
+```
 chmod 600 /swapfile
 mkswap /swapfile
 swapon /swapfile
@@ -234,20 +264,39 @@ systemctl enable NetworkManager
 
 ---
 
-## 13. Mapeo de Teclado Permanente
-
-Crear archivo:
-```
-echo "KEYMAP=la-latin1" > /etc/vconsole.conf
-```
-
----
-
-## 14. Reiniciar
+## 13. Reiniciar
 
 ```
 exit
+swapoff /mnt/swapfile
 umount -R /mnt
 reboot
 ```
 
+---
+
+login en tu usuario
+ping archlinux.org
+umcli
+sudo pacman -S hyprland uwsm xdg-desktop-portal-hyprland hyprpolkitagent pipewire-pulse pipewire-alsa pipewire-jack wofi waybar kitty mako git base-devel
+
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+cd ..
+rm -rf ./yay
+
+ls -a
+nano .bash_profile:
+
+if uwsm check may-start; then
+   exec uwsm start hyprland.desktop
+fi
+
+reboot
+
+login en tu usuario
+Win + Q -> abrir la terminal
+Win + C -> cerrar ventana
+
+[Copiar configuración del tutorial](https://github.com/LukeElrod/dotfiles.git)
