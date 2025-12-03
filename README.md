@@ -278,7 +278,7 @@ reboot
 login en tu usuario
 ping archlinux.org
 umcli
-sudo pacman -S hyprland uwsm xdg-desktop-portal-hyprland hyprpolkitagent pipewire-pulse pipewire-alsa pipewire-jack wofi waybar kitty mako git base-devel
+sudo pacman -S hyprland uwsm xdg-desktop-portal-hyprland hyprpolkitagent pipewire-pulse pipewire-alsa pipewire-jack wofi waybar kitty mako git base-devel hyprpaper nautilus
 
 git clone https://aur.archlinux.org/yay.git
 cd yay
@@ -300,3 +300,79 @@ Win + Q -> abrir la terminal
 Win + C -> cerrar ventana
 
 [Copiar configuración del tutorial](https://github.com/LukeElrod/dotfiles.git)
+
+yay -S google-chrome
+mkdir ~/Pictures
+mkadir ~/Downloads
+mkdir ~/Projects
+
+sudo timedatectl set-timezone America/Argentina/Buenos_Aires
+
+sudo pacman -S plymouth
+HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block plymouth sd-encrypt filesystems fsck)
+sudo mkinitcpio -P
+GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet splash"
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+plymouth-set-default-theme -l
+sudo plymouth-set-default-theme bgrt
+sudo mkinitcpio -P
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+
+
+window {
+    background: #1e1e2e;
+    border: 1px solid #11111b;
+    border-radius: 12px;
+    padding: 10px;
+}
+
+calendar {
+    background: transparent;
+    color: #cdd6f4;
+    font-family: "JetBrains Mono", "Fira Sans", sans-serif;
+    font-size: 14px;
+    border: none;
+}
+
+/* Día seleccionado */
+calendar:selected {
+    background: #89b4fa;
+    color: #1e1e2e;
+    border-radius: 8px;
+}
+
+/* Día actual */
+calendar:indeterminate {
+    color: #f38ba8;
+}
+
+/* Hover */
+calendar:focus,
+calendar:hover {
+    background: #313244;
+    border-radius: 8px;
+}
+
+/* Días de otros meses */
+calendar:other-month {
+    color: #6c7086;
+}
+
+/* Nombres de días */
+calendar.header {
+    color: #a6adc8;
+    font-weight: bold;
+}
+
+/* Botones de navegación */
+button {
+    background: #313244;
+    color: #cdd6f4;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+button:hover {
+    background: #45475a;
+}
